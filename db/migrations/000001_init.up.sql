@@ -17,7 +17,8 @@ CREATE TABLE tasks (
                        description TEXT,
                        timer BOOLEAN DEFAULT FALSE,
                        start_time TIMESTAMP,
-                       end_time TIMESTAMP
+                       end_time TIMESTAMP,
+                       overall_time INTERVAL
 );
 
 -- Create indexes

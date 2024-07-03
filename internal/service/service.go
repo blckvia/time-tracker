@@ -1,6 +1,8 @@
 package service
 
 import (
+	"time"
+
 	"time-tracker/internal/entities"
 	"time-tracker/internal/repository"
 )
@@ -16,7 +18,7 @@ type Users interface {
 type Tasks interface {
 	Create(input *entities.Task, userID int) (int, error)
 	StartTask(taskID int) error
-	StopTask(taskID int) error
+	StopTask(taskID int) (time.Duration, error)
 }
 
 type Service struct {

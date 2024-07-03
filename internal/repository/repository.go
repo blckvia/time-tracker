@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"go.uber.org/zap"
@@ -20,7 +21,7 @@ type Users interface {
 type Tasks interface {
 	Create(input *entities.Task, userID int) (int, error)
 	StartTask(taskID int) error
-	StopTask(taskID int) error
+	StopTask(taskID int) (time.Duration, error)
 }
 
 type Repository struct {

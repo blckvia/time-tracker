@@ -1,6 +1,8 @@
 package service
 
 import (
+	"time"
+
 	"time-tracker/internal/entities"
 	"time-tracker/internal/repository"
 )
@@ -21,6 +23,6 @@ func (s *TasksService) StartTask(taskID int) error {
 	return s.repo.StartTask(taskID)
 }
 
-func (s *TasksService) StopTask(taskID int) error {
+func (s *TasksService) StopTask(taskID int) (time.Duration, error) {
 	return s.repo.StopTask(taskID)
 }

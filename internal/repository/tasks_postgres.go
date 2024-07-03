@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"go.uber.org/zap"
@@ -29,7 +30,7 @@ func (r *TasksPostgres) Create(input *entities.Task, userID int) (int, error) {
 
 	var exists bool
 
-	err := r.db.QueryRow(r.ctx, fmt.Sprintf("SELECT EXISTS(SELECT 1 FROM %s WHERE id = $1)", tasksTable), userID).Scan(&exists)
+	err := r.db.QueryRow(r.ctx, fmt.Sprintf("SELECT EXISTS(SELECT 1 FROM users WHERE id = $1)"), userID).Scan(&exists)
 	if err != nil {
 		return 0, err
 	}
@@ -60,6 +61,7 @@ func (r *TasksPostgres) Create(input *entities.Task, userID int) (int, error) {
 	}
 
 	return id, nil
+
 }
 
 func (r *TasksPostgres) StartTask(taskID int) error {
@@ -109,6 +111,41 @@ func (r *TasksPostgres) StartTask(taskID int) error {
 	return nil
 }
 
-func (r *TasksPostgres) StopTask(taskID int) error {
-	return nil
+func (r *TasksPostgres) StopTask(taskID int) (time.Duration, error) {
+	tx, err := r.db.Begin(r.ctx)
+	if err != nil {
+		return 0, err
+	}
+	defer tx.Rollback(r.ctx)
+
+	endTime := time.Now()
+
+	_, err = tx.Exec(r.ctx, `UPDATE tasks SET end_time = $1 WHERE id = $2`, endTime, taskID)
+	if err != nil {
+		return 0, err
+	}
+
+	var startTime *time.Time
+	err = tx.QueryRow(r.ctx, `SELECT start_time FROM tasks WHERE id = $1`, taskID).Scan(&startTime)
+	if err != nil {
+		return 0, err
+	}
+
+	if startTime == nil || startTime.IsZero() {
+		return 0, fmt.Errorf("start time is not set for task %d", taskID)
+	}
+
+	overallTime := endTime.Sub(*startTime)
+
+	_, err = tx.Exec(r.ctx, `UPDATE tasks SET overall_time = $1 WHERE id = $2`, overallTime, taskID)
+	if err != nil {
+		return 0, err
+	}
+
+	err = tx.Commit(r.ctx)
+	if err != nil {
+		return 0, err
+	}
+
+	return overallTime, nil
 }

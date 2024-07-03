@@ -54,5 +54,20 @@ func (h *Handler) startTask(c *gin.Context) {
 }
 
 func (h *Handler) stopTask(c *gin.Context) {
+	taskID, err := GetTaskByID(c)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
 
+	overallTime, err := h.services.Tasks.StopTask(taskID)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]string{
+		"overall_time": overallTime.String(),
+		"message":      "Task stopped successfully",
+	})
 }

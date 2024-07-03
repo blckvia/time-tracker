@@ -35,7 +35,7 @@ func (h *Handler) createUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, map[string]any{
+	c.JSON(http.StatusOK, map[string]int{
 		"id": id,
 	})
 }
