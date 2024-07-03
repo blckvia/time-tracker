@@ -13,8 +13,8 @@ func NewTasksService(repo repository.Tasks) *TasksService {
 	return &TasksService{repo: repo}
 }
 
-func (s *TasksService) Create(input *entities.Task) (int, error) {
-	return s.repo.Create(input)
+func (s *TasksService) Create(input *entities.Task, userID int) (int, error) {
+	return s.repo.Create(input, userID)
 }
 
 func (s *TasksService) StartTask(taskID int) error {

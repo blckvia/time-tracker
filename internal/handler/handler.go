@@ -30,6 +30,13 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			users.PUT("/:id", h.updateUser)
 			users.POST("/:id", h.addUser)
 		}
+
+		tasks := api.Group("/tasks")
+		{
+			tasks.POST("/:id", h.createTask)
+			tasks.POST("/:id/start", h.startTask)
+			tasks.POST("/:id/stop", h.stopTask)
+		}
 	}
 
 	return router

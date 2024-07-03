@@ -14,7 +14,7 @@ type Users interface {
 }
 
 type Tasks interface {
-	Create(input *entities.Task) (int, error)
+	Create(input *entities.Task, userID int) (int, error)
 	StartTask(taskID int) error
 	StopTask(taskID int) error
 }

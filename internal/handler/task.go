@@ -9,13 +9,32 @@ import (
 )
 
 func (h *Handler) createTask(c *gin.Context) {
-	var input entities.Task
+	userID, err := GetUserByID(c)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
 
+	var input entities.Task
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
+	if input.Task == "" {
+		newErrorResponse(c, http.StatusBadRequest, "task is required")
+		return
+	}
+
+	id, err := h.services.Tasks.Create(&input, userID)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]any{
+		"id": id,
+	})
 }
 
 func (h *Handler) startTask(c *gin.Context) {
