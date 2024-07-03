@@ -22,3 +22,18 @@ func GetUserByID(c *gin.Context) (int, error) {
 	}
 	return userID, nil
 }
+
+func GetTaskByID(c *gin.Context) (int, error) {
+	taskIDStr := c.Param("id")
+	if taskIDStr == "" {
+		newErrorResponse(c, http.StatusBadRequest, "task id is required")
+		return 0, errors.New("empty task id field")
+	}
+
+	taskID, err := strconv.Atoi(taskIDStr)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid task id format")
+		return 0, errors.New("invalid task id")
+	}
+	return taskID, nil
+}
