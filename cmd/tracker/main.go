@@ -22,23 +22,23 @@ func main() {
 		}
 	}(logger)
 
-	app := app.NewApp(ctx, logger)
+	tracker := app.NewApp(ctx, logger)
 
 	go func() {
-		if err := app.Run(); err != nil {
+		if err := tracker.Run(); err != nil {
 			logger.Fatal("Error running server", zap.Error(err))
 		}
 	}()
 
-	app.Logger.Info("Server started", zap.String("address", app.Server.Addr))
+	tracker.Logger.Info("Server started", zap.String("address", tracker.Server.Addr))
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
 	<-quit
 
-	app.Logger.Info("Shutting down server")
+	tracker.Logger.Info("Shutting down server")
 
-	if err := app.Shutdown(ctx); err != nil {
+	if err := tracker.Shutdown(ctx); err != nil {
 		logger.Fatal("Error shutting down server", zap.Error(err))
 	}
 }

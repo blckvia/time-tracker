@@ -1,0 +1,31 @@
+# See: https://taskfile.dev/api/
+
+version: "3"
+
+tasks:
+  lint:
+    aliases:
+      - lint
+    desc: "Lint code"
+    cmds:
+      - golangci-lint run ./... -c .golangci-lint.yml
+  migrate-new:
+    aliases:
+      - migrate new
+    desc: "Migrate database new"
+    cmds:
+      - migrate create -ext sql -dir ./db/migrations -seq init
+
+  migrate-up:
+    aliases:
+      - migrate up
+    desc: "Migrate database up"
+    cmds:
+      - migrate -path ./db/migrations -database 'postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable' up
+
+  migrate-down:
+    aliases:
+      - migrate down
+    desc: "Migrate database down"
+    cmds:
+      - migrate -path ./db/migrations -database 'postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable' down

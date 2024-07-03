@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  app:
+    image: go-service:develop
+    volumes:
+      - ../configs:/application/configs
+      - ../.env:/application/.env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: database
+    ports:
+      - "5432:5432"
