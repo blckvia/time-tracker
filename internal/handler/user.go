@@ -44,7 +44,7 @@ func (h *Handler) getUsers(c *gin.Context) {
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
 	offset, _ := strconv.Atoi(c.DefaultQuery("offset", "0"))
 
-	filters := map[string]any{}
+	filters := map[string]string{}
 	if passportSeries := c.Query("passport_series"); passportSeries != "" {
 		filters["passport_series"] = passportSeries
 	}

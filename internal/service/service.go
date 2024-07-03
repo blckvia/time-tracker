@@ -9,7 +9,7 @@ type Users interface {
 	Create(input *entities.Users) (int, error)
 	Update(userID int, input *entities.Users) error
 	Delete(userID int) error
-	GetAll(filters map[string]any, limit, offset int) (entities.GetAllUsers, error)
+	GetAll(filters map[string]string, limit, offset int) (entities.GetAllUsers, error)
 	GetByID(userID int) (entities.Users, error)
 }
 

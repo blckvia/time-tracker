@@ -25,7 +25,7 @@ func (s *UsersService) Delete(userID int) error {
 	return s.repo.Delete(userID)
 }
 
-func (s *UsersService) GetAll(filters map[string]any, limit, offset int) (entities.GetAllUsers, error) {
+func (s *UsersService) GetAll(filters map[string]string, limit, offset int) (entities.GetAllUsers, error) {
 	return s.repo.GetAll(filters, limit, offset)
 }
 

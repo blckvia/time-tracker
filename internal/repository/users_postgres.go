@@ -145,7 +145,7 @@ func (r *UsersPostgres) Delete(userID int) error {
 	return nil
 }
 
-func (r *UsersPostgres) GetAll(filters map[string]any, limit, offset int) (entities.GetAllUsers, error) {
+func (r *UsersPostgres) GetAll(filters map[string]string, limit, offset int) (entities.GetAllUsers, error) {
 	var users []entities.Users
 
 	conditions := []string{}
