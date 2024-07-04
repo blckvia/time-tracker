@@ -32,3 +32,7 @@ func (s *UsersService) GetAll(filters map[string]string, limit, offset int) (ent
 func (s *UsersService) GetByID(userID int) (entities.Users, error) {
 	return s.repo.GetByID(userID)
 }
+
+func (s *UsersService) Stats(userID int) (entities.UserStats, error) {
+	return s.repo.Stats(userID)
+}

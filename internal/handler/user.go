@@ -125,6 +125,18 @@ func (h *Handler) updateUser(c *gin.Context) {
 	c.JSON(http.StatusOK, statusResponse{"ok"})
 }
 
-func (h *Handler) addUser(c *gin.Context) {
+func (h *Handler) getUsersStats(c *gin.Context) {
+	userID, err := GetUserByID(c)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
 
+	userStats, err := h.services.Users.Stats(userID)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, userStats)
 }

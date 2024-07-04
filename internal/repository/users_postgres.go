@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"go.uber.org/zap"
@@ -241,4 +242,75 @@ func (r *UsersPostgres) GetByID(userID int) (entities.Users, error) {
 	}
 
 	return user, nil
+}
+
+//	func (r *UsersPostgres) Stats(userID int) (entities.UserStats, error) {
+//		var userStats entities.UserStats
+//
+//		query := fmt.Sprintf(`SELECT ut.name, ut.surname, ut.patronymic, ut.passport_series, ut.passport_number, ut.address, t.task, t.description, t.overall_time
+//			FROM %s ut LEFT JOIN %s t ON t.user_id = ut.id
+//			WHERE ut.id = $1 AND t.overall_time IS NOT NULL ORDER BY t.overall_time DESC
+//		`, usersTable, tasksTable)
+//
+//		conn, err := r.db.Acquire(r.ctx)
+//		if err != nil {
+//			return userStats, err
+//		}
+//		defer conn.Release()
+//
+//		pgxConn := conn.Conn()
+//
+//		_, err = pgxConn.Prepare(r.ctx, "getUserStats", query)
+//		if err != nil {
+//			return userStats, err
+//		}
+//
+//		err = pgxConn.QueryRow(r.ctx, "getUserStats", userID).Scan(&userStats.Name, &userStats.Surname, &userStats.Patronymic, &userStats.PassportSeries, &userStats.PassportNumber, &userStats.Address, &userStats.Tasks.Task, &userStats.Tasks.Description, &userStats.OverallTime)
+//
+//		row := pgxConn.QueryRow(r.ctx, "getUserStats", userID)
+//
+//		if err := row.Scan(&userStats.Name, &userStats.Surname, &userStats.Patronymic, &userStats.PassportSeries, &userStats.PassportNumber, &userStats.Address, &userStats.Tasks.Task, &userStats.Tasks.Description, &userStats.OverallTime); err != nil {
+//			return userStats, err
+//		}
+//		return userStats, nil
+//	}
+func (r *UsersPostgres) Stats(userID int) (entities.UserStats, error) {
+	var userStats entities.UserStats
+	var tasks []entities.Task
+
+	query := fmt.Sprintf(`SELECT ut.name, ut.surname, ut.patronymic, ut.passport_series, ut.passport_number, ut.address, t.task, t.description, t.overall_time 
+		FROM %s ut LEFT JOIN %s t ON t.user_id = ut.id 
+		WHERE ut.id = $1 AND t.overall_time IS NOT NULL ORDER BY t.overall_time DESC `, usersTable, tasksTable)
+
+	conn, err := r.db.Acquire(r.ctx)
+	if err != nil {
+		return userStats, err
+	}
+	defer conn.Release()
+
+	rows, err := conn.Query(r.ctx, query, userID)
+	if err != nil {
+		return userStats, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var task entities.Task
+		err = rows.Scan(&userStats.Name, &userStats.Surname, &userStats.Patronymic, &userStats.PassportSeries, &userStats.PassportNumber, &userStats.Address, &task.Task, &task.Description, &task.OverallTime)
+		if err != nil {
+			return userStats, err
+		}
+		tasks = append(tasks, task)
+	}
+
+	userStats.Tasks = tasks
+
+	// Calculate overall time
+	var totalDuration time.Duration
+	for _, task := range tasks {
+		totalDuration += task.OverallTime
+	}
+	userStats.OverallTime = entities.FormatDuration(totalDuration)
+
+	return userStats, nil
 }

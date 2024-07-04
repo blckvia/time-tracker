@@ -16,6 +16,7 @@ type Users interface {
 	Delete(userID int) error
 	GetAll(filters map[string]string, limit, offset int) (entities.GetAllUsers, error)
 	GetByID(userID int) (entities.Users, error)
+	Stats(userID int) (entities.UserStats, error)
 }
 
 type Tasks interface {
