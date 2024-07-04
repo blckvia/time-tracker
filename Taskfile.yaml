@@ -3,12 +3,6 @@
 version: "3"
 
 tasks:
-  lint:
-    aliases:
-      - lint
-    desc: "Lint code"
-    cmds:
-      - golangci-lint run ./... -c .golangci-lint.yml
   migrate-new:
     aliases:
       - migrate new
