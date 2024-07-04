@@ -15,6 +15,13 @@ import (
 	"time-tracker/internal/service"
 )
 
+// @title Time Tracker API
+// @version 1.0
+// @description API Server for Go Service
+
+// @host localhost:8080
+// @BasePath /
+
 type App struct {
 	Server *http.Server
 	Logger *zap.Logger

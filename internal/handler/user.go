@@ -9,6 +9,18 @@ import (
 	"time-tracker/internal/entities"
 )
 
+// @Summary Create user
+// @Tags Users
+// @Description Create user
+// @ID create-user
+// @Accept  json
+// @Produce  json
+// @Param input body entities.Users true "users info"
+// @Success 200 {object} entities.Users
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/users/ [post]
 func (h *Handler) createUser(c *gin.Context) {
 	var input entities.Users
 	if err := c.BindJSON(&input); err != nil {
@@ -40,6 +52,20 @@ func (h *Handler) createUser(c *gin.Context) {
 	})
 }
 
+// @Summary Get all users
+// @Tags Users
+// @Description Get all users
+// @ID get-users
+// @Accept  json
+// @Produce  json
+// @Param limit query int false "limit"
+// @Param offset query int false "offset"
+// @Success 200 {array} entities.GetAllUsers
+// @Failure 400 {object} errorResponse
+// @Failure 404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/users/ [get]
 func (h *Handler) getUsers(c *gin.Context) {
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
 	offset, _ := strconv.Atoi(c.DefaultQuery("offset", "0"))
@@ -73,6 +99,19 @@ func (h *Handler) getUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, users)
 }
 
+// @Summary Get user
+// @Tags Users
+// @Description Get single user
+// @ID get-user
+// @Accept  json
+// @Produce  json
+// @Param user_id path int true "user_id"
+// @Success 200 {object} entities.Users
+// @Failure 400 {object} errorResponse
+// @Failure 404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/users/{user_id} [get]
 func (h *Handler) getUser(c *gin.Context) {
 	userID, err := GetUserByID(c)
 	if err != nil {
@@ -89,6 +128,19 @@ func (h *Handler) getUser(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+// @Summary Delete user
+// @Tags Users
+// @Description Delete user
+// @ID delete-user
+// @Accept  json
+// @Produce  json
+// @Param user_id path int true "user_id"
+// @Success 200
+// @Failure 400 {object} errorResponse
+// @Failure 404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/users/{user_id} [delete]
 func (h *Handler) deleteUser(c *gin.Context) {
 	UserID, err := GetUserByID(c)
 	if err != nil {
@@ -104,6 +156,20 @@ func (h *Handler) deleteUser(c *gin.Context) {
 	c.JSON(http.StatusOK, statusResponse{"ok"})
 }
 
+// @Summary Update user
+// @Tags Users
+// @Description Update user
+// @ID update-user
+// @Accept  json
+// @Produce  json
+// @Param input body entities.Users true "goods info"
+// @Param user_id path int true "user_id"
+// @Success 200 {object} entities.Users
+// @Failure 400 {object} errorResponse
+// @Failure 404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/users/{user_id} [put]
 func (h *Handler) updateUser(c *gin.Context) {
 	userID, err := GetUserByID(c)
 	if err != nil {
@@ -125,6 +191,20 @@ func (h *Handler) updateUser(c *gin.Context) {
 	c.JSON(http.StatusOK, statusResponse{"ok"})
 }
 
+// @Summary Get user stats
+// @Tags Users
+// @Description Get user stats with overall time and tasks
+// @ID get-stats-user
+// @Accept  json
+// @Produce  json
+// @Param input body entities.UserStats true "stats info"
+// @Param user_id path int true "user_id"
+// @Success 200
+// @Failure 400 {object} errorResponse
+// @Failure 404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/users/{user_id}/stats [get]
 func (h *Handler) getUsersStats(c *gin.Context) {
 	userID, err := GetUserByID(c)
 	if err != nil {

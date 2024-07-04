@@ -27,15 +27,6 @@ type Meta struct {
 	Offset int `json:"offset"`
 }
 
-type UpdateUsers struct {
-	PassportSeries string `json:"passport_series"`
-	PassportNumber string `json:"passport_number"`
-	Name           string `json:"name"`
-	Surname        string `json:"surname"`
-	Patronymic     string `json:"patronymic"`
-	Address        string `json:"address"`
-}
-
 type UserStats struct {
 	Name           string `json:"name"`
 	Surname        string `json:"surname"`

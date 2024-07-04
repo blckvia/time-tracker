@@ -12,5 +12,5 @@ type Task struct {
 	Timer       bool          `json:"timer"`
 	StartTime   time.Time     `json:"start_time"`
 	EndTime     time.Time     `json:"end_time"`
-	OverallTime time.Duration `json:"overall_time"`
+	OverallTime time.Duration `json:"overall_time" swaggerignore:"true"`
 }
