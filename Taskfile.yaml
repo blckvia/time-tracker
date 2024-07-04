@@ -15,11 +15,29 @@ tasks:
       - migrate up
     desc: "Migrate database up"
     cmds:
-      - migrate -path ./db/migrations -database 'postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable' up
+      - sh -c 'source .env && export $(cut -d= -f1 .env) && migrate -path ./db/migrations -database "$DB_URL" up'
 
   migrate-down:
     aliases:
       - migrate down
     desc: "Migrate database down"
     cmds:
-      - migrate -path ./db/migrations -database 'postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable' down
+      - sh -c 'source .env && export $(cut -d= -f1 .env) && migrate -path ./db/migrations -database "$DB_URL" down'
+  docker:
+    aliases:
+      - docker
+    desc: "Docker"
+    cmds:
+      - docker build -t time-tracker:develop .
+  compose-up:
+    aliases:
+      - compose up
+    desc: "Compose up"
+    cmds:
+      - docker-compose up -d
+  compose-down:
+    aliases:
+      - compose down
+    desc: "Compose down"
+    cmds:
+      - docker-compose down
