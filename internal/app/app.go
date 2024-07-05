@@ -19,7 +19,7 @@ import (
 // @version 1.0
 // @description API Server for Go Service
 
-// @host localhost:8080
+// @host 127.0.10.5:8080
 // @BasePath /
 
 type App struct {
