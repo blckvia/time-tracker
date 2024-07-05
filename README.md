@@ -47,6 +47,14 @@ $> task migrate-up
 
 http://127.0.10.5:8080/swagger/index.html
 
+### Routes
+- http://127.0.10.5:8080/api/users [GET] get all users
+- http://127.0.10.5:8080/api/users [POST] create user
+- http://127.0.10.5:8080/api/users/:id [DELETE] delete user
+- http://127.0.10.5:8080/api/users/:id [PUT] update user info
+- http://127.0.10.5:8080/api/users/:id/stats [GET] get overall user stats with intervals
+- http://127.0.10.5:8080/api/tasks/:id/start [POST] start timer
+- http://127.0.10.5:8080/api/tasks/:d/stop [POST] stop timer
 
 #### Swagger specs:
 - [api group](./docs/swagger.yaml)
